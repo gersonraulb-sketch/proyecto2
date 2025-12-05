@@ -1,8 +1,12 @@
+fetch('modal.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('modal-container').innerHTML = html;
+
 const modal = document.querySelector('.mimodal');
 const overlay = document.querySelector('.overlay');
 const openmodalbtn = document.querySelector('.btn-open');
 const closemodalbtn = document.querySelector('.btn-close');
-
 const formRegistro = document.querySelector('.form-registro');
 const formLogin = document.querySelector('.form-login');
 const loginToggle = document.querySelector('.btn-login-toggle');
@@ -39,4 +43,5 @@ registroToggle.addEventListener('click', () => {
   formLogin.classList.add('d-none');
   formRegistro.classList.remove('d-none');
 });
+
 
