@@ -57,62 +57,61 @@ fetch('modal.html')
     });
 
     // Registro
-    document.querySelector('.custom-form-registro form').addEventListener('submit', (e) => {
-      e.preventDefault();
+document.querySelector('.custom-form-registro form').addEventListener('submit', (e) => {
+  e.preventDefault();
 
-      const usuario = e.target.querySelector('input[placeholder="Usuario"]').value;
-      const nombre = e.target.querySelector('input[placeholder="Nombre completo"]').value;
-      const correo = e.target.querySelector('input[placeholder="Correo"]').value;
-      const password = e.target.querySelector('input[placeholder="Contraseña"]').value;
+  const usuario = e.target.querySelector('input[placeholder="Usuario"]').value.trim();
+  const nombre = e.target.querySelector('input[placeholder="Nombre completo"]').value.trim();
+  const correo = e.target.querySelector('input[placeholder="Correo"]').value.trim();
+  const password = e.target.querySelector('input[placeholder="Contraseña"]').value.trim();
 
-      let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  if (!usuario || !nombre || !correo || !password) {
+    alert("Por favor completa todos los campos");
+    return;
+  }
 
-      if (usuarios.some(u => u.correo === correo)) {
-        alert("Ese correo ya está registrado");
-        return;
-      }
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-      const nuevoUsuario = { usuario, nombre, correo, password };
-      usuarios.push(nuevoUsuario);
-      localStorage.setItem("usuarios", JSON.stringify(usuarios));
+  if (usuarios.some(u => u.correo === correo)) {
+    alert("Ese correo ya está registrado");
+    return;
+  }
 
-      // Iniciar sesión automáticamente
-      sessionStorage.setItem("usuarioActivo", JSON.stringify(nuevoUsuario));
+  const nuevoUsuario = { usuario, nombre, correo, password };
+  usuarios.push(nuevoUsuario);
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
-      alert("Registro exitoso. Sesión iniciada.");
+  sessionStorage.setItem("usuarioActivo", JSON.stringify(nuevoUsuario));
+  alert("Registro exitoso. Sesión iniciada.");
+  mostrarPerfil(nuevoUsuario);
+});
 
-      mostrarPerfil(nuevoUsuario);
-    });
 
 
     // Login
-    document.querySelector('.custom-form-login form').addEventListener('submit', (e) => {
-      e.preventDefault();
+  document.querySelector('.custom-form-login form').addEventListener('submit', (e) => {
+  e.preventDefault();
 
-      const correo = e.target.querySelector('input[placeholder="Correo"]').value;
-      const password = e.target.querySelector('input[placeholder="Contraseña"]').value;
+  const correo = e.target.querySelector('input[placeholder="Correo"]').value.trim();
+  const password = e.target.querySelector('input[placeholder="Contraseña"]').value.trim();
 
-      let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  if (!correo || !password) {
+    alert("Debes ingresar correo y contraseña");
+    return;
+  }
 
-      const usuario = usuarios.find(u => u.correo === correo && u.password === password);
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  const usuario = usuarios.find(u => u.correo === correo && u.password === password);
 
-      if (usuario) {
+  if (usuario) {
+    sessionStorage.setItem("usuarioActivo", JSON.stringify(usuario));
+    alert("Sesión iniciada correctamente");
+    mostrarPerfil(usuario);
+  } else {
+    alert("Datos incorrectos o usuario no registrado");
+  }
+});
 
-        sessionStorage.setItem("usuarioActivo", JSON.stringify(usuario));
-        alert("Sesión iniciada correctamente");
-        mostrarPerfil(usuario);
-      } else {
-        alert("Algun dato es incorrecto o no estás registrado");
-      }
-    });
-
-    window.addEventListener("load", () => {
-      const usuarioActivo = sessionStorage.getItem("usuarioActivo");
-      if (usuarioActivo) {
-        const user = JSON.parse(usuarioActivo);
-        console.log("Sesión activa:", user);
-      }
-    });
 
     function mostrarPerfil(usuario) {
       document.querySelector('.custom-form-login').classList.add('d-none');
